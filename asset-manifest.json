@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/Shoes.git/static/css/main.db7f80bc.css",
+    "main.js": "/Shoes.git/static/js/main.ae7e885b.js",
+    "static/js/453.8ab44547.chunk.js": "/Shoes.git/static/js/453.8ab44547.chunk.js",
+    "static/media/Shoes2.png": "/Shoes.git/static/media/Shoes2.0457b9ab7e3686fa1de9.png",
+    "static/media/Shoes.png": "/Shoes.git/static/media/Shoes.cdf0e1ac482cae90da96.png",
+    "index.html": "/Shoes.git/index.html",
+    "main.db7f80bc.css.map": "/Shoes.git/static/css/main.db7f80bc.css.map",
+    "main.ae7e885b.js.map": "/Shoes.git/static/js/main.ae7e885b.js.map",
+    "453.8ab44547.chunk.js.map": "/Shoes.git/static/js/453.8ab44547.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.db7f80bc.css",
+    "static/js/main.ae7e885b.js"
+  ]
+}

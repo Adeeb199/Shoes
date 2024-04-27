@@ -11,7 +11,7 @@ const HomePage = () => {
         <Shoes category="Men" numToShow={4} />
         <Shoes category="Women" numToShow={4} />
         <Shoes category="Kids" numToShow={4}/>
-        <Shoes category="Summer" numToShow={4}/>
+        
     </div>
   )
 }

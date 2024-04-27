@@ -2,7 +2,7 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://adeeb199.github.io/Shoes.git/",
+  "homepage": "https://adeeb199.github.io/Shoes/",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.2",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
@@ -13,6 +13,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.1.0",
+    "react-router-dom": "^6.23.0",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },

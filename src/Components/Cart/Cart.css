@@ -1,0 +1,26 @@
+.quantity-control,
+.remove-btn {
+  width: 32px;
+  height: 32px;
+  background-color: #4299e1; /* Set background color */
+  color: #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Center the icon vertically */
+}
+
+.quantity-control:hover,
+.remove-btn:hover {
+  background-color: #3182ce; /* Change background color on hover */
+  border-color: #3182ce; /* Change border color on hover */
+}
+
+.remove-btn {
+  border-color: #e53e3e; /* Set border color for remove button */
+}
+
+.remove-btn:hover {
+  background-color: #c53030; /* Change background color for remove button on hover */
+}

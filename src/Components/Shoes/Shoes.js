@@ -1,82 +1,94 @@
-import React, { useState } from 'react';
-import { FaStar, FaStarHalfAlt } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { useCart } from '../Context/CartContext';
+import { useTheme } from '../../ThemeContext';
 import ShoesData from '../../Data/Data';
-import { useTheme } from '../../ThemeContext'; // Import the useTheme hook
+import StarRating from '../StarRating/StarRating'; // Import the StarRating component
 
 const Shoes = ({ category, numToShow }) => {
   const [addedToCart, setAddedToCart] = useState(Array(numToShow).fill(false));
-  const { isDarkTheme } = useTheme(); // Get the dark theme state from context
+  const { isDarkTheme } = useTheme();
+  const { cart, addToCart } = useCart();
 
   const filteredShoesData = ShoesData.filter(item => item.category === category);
   const slicedShoesData = filteredShoesData.slice(0, numToShow);
 
-  const handleAddToCart = (index) => {
-    console.log(`Added ${slicedShoesData[index].title} to cart`);
-    const updatedCart = [...addedToCart];
-    updatedCart[index] = true;
-    setAddedToCart(updatedCart);
+  useEffect(() => {
+    const updatedAddedToCart = slicedShoesData.map(item =>
+      cart.some(cartItem => cartItem.id === item.id)
+    );
+    if (!arraysAreEqual(updatedAddedToCart, addedToCart)) {
+      setAddedToCart(() => updatedAddedToCart);
+    }
+  }, [cart, slicedShoesData, addedToCart]);
+
+  const arraysAreEqual = (arr1, arr2) => {
+    if (arr1.length !== arr2.length) return false;
+    for (let i = 0; i < arr1.length; i++) {
+      if (arr1[i] !== arr2[i]) return false;
+    }
+    return true;
   };
 
-  const renderRatingStars = (rating) => {
-    const starIcons = [];
-    const filledStars = Math.floor(rating);
-    const hasHalfStar = rating - filledStars >= 0.5;
-
-    for (let i = 0; i < filledStars; i++) {
-      starIcons.push(<FaStar key={i} className={isDarkTheme ? "text-yellow-500" : "text-yellow-500"} />);
+  const handleAddToCart = (index) => {
+    const selectedItem = slicedShoesData[index];
+    if (!addedToCart[index]) {
+      console.log(`Added ${selectedItem.title} to cart`);
+      setAddedToCart(prevAddedToCart => {
+        const newAddedToCart = [...prevAddedToCart];
+        newAddedToCart[index] = true;
+        return newAddedToCart;
+      });
+      addToCart(selectedItem);
+    } else {
+      console.log(`Removed ${selectedItem.title} from cart`);
     }
-
-    if (hasHalfStar) {
-      starIcons.push(<FaStarHalfAlt key={filledStars} className={isDarkTheme ? "text-yellow-500" : "text-gray-300"} />);
-    }
-
-    const remainingStars = 5 - starIcons.length;
-    for (let i = 0; i < remainingStars; i++) {
-      starIcons.push(<FaStar key={filledStars + i + 1} className={isDarkTheme ? "text-gray-300" : "text-gray-300"} />);
-    }
-
-    return starIcons;
   };
 
   return (
-    <div className={`mt-4 mb-4 ${isDarkTheme ? "text-white" : "text-gray-800"}`}>
+    <div className={` ${isDarkTheme ? "text-gray-800" : "text-white"} ${isDarkTheme ? "bg-gray-900" : ""}`}> {/* Apply dark theme to text color and background */}
       <div className={`text-center text-3xl font-bold mb-4 ${isDarkTheme ? "text-blue-300" : "text-blue-700"}`}>
         <span className={`${isDarkTheme ? "border-b-4 border-blue-300" : "border-b-4 border-blue-700"}`}>{category.toUpperCase()} SHOES</span>
       </div>
       <div className='container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
         {slicedShoesData.map((item, index) => (
-          <div
-            key={index}
-            id={`${category.toLowerCase()}-shoe-item-${index}`}
-            className={`bg-white rounded-lg shadow-xl p-4 grid-item ${isDarkTheme ? "bg-gray-800" : ""}`}
-          >
-            <img
-              src={item.image}
-              alt={item.title}
-              className="w-full h-auto rounded-lg mb-4 transform hover:scale-110 transition duration-300"
-            />
-            <h2 className={`${isDarkTheme ? "text-gray-300" : "text-black"} text-xl font-semibold mb-2`}>{item.title}</h2>
-            <p className={`${isDarkTheme ? "text-gray-400" : "text-gray-600"} mb-2`}>{item.description}</p>
-            <div className="flex items-center justify-between mb-2">
-              <p>
-                <span className={`${isDarkTheme ? "text-gray-400" : "text-gray-600"} font-semibold mr-2 line-through`}>{item.oldPrice}</span>
-                <span className={`${isDarkTheme ? "text-red-400" : "text-red-500"} font-semibold`}>{item.price}</span>
-              </p>
-              <p className="flex items-center">
-                <span className={`${isDarkTheme ? "text-gray-400" : "text-gray-600"} mr-2`}>Rating:</span>
-                <span className={`${isDarkTheme ? "text-blue-400" : "text-blue-500"} flex`}>
-                  {renderRatingStars(item.rating)}
-                </span>
-              </p>
-            </div>
-            <button
-              onClick={() => handleAddToCart(index)}
-              className={`block w-full px-4 py-2 ${addedToCart[index] ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600 transition duration-300'} text-white rounded-md`}
-              disabled={addedToCart[index]}
+          <Link key={index} to={`/item/${item.id}`} className="w-full">
+            <div
+              id={`${category.toLowerCase()}-shoe-item-${index}`}
+              className={`bg-white rounded-lg shadow-xl p-4 grid-item ${isDarkTheme ? "bg-gray-800" : ""}`}
             >
-              {addedToCart[index] ? 'Added to Cart' : 'Add to Cart'}
-            </button>
-          </div>
+              <img
+                src={item.image}
+                alt={item.title}
+                className="w-full h-auto rounded-lg mb-4 transform hover:scale-110 transition duration-300"
+                style={{ maxWidth: '100%' }} // Adjust image size for responsiveness
+              />
+              <h2 className={`${isDarkTheme ? "text-blue-900" : "text-black"} text-xl font-semibold mb-2`}>{item.title}</h2>
+              <p className={`${isDarkTheme ? "text-gray-400" : "text-gray-600"} mb-2`}>{item.description}</p>
+              <div className="flex flex-col sm:flex-row items-center justify-between mb-2"> {/* Adjust flex layout for responsiveness */}
+                <div>
+                  <span className={`${isDarkTheme ? "text-gray-400" : "text-gray-600"} font-semibold mr-2 line-through`}>${item.oldPrice}</span>
+                  <span className={`${isDarkTheme ? "text-red-400" : "text-red-500"} font-semibold`}>${item.price}</span>
+                </div>
+                <div className="flex items-center mt-2 sm:mt-0"> {/* Adjust margin for responsiveness */}
+                  <span className={`${isDarkTheme ? "text-gray-400" : "text-gray-600"} mr-2`}>Rating:</span>
+                  <div className="flex items-center">
+                    <StarRating rating={item.rating} isDarkTheme={isDarkTheme} />
+                  </div>
+                </div>
+              </div>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleAddToCart(index);
+                }}
+                className={`block w-full px-4 py-2 ${addedToCart[index] ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600 transition duration-300'} text-white rounded-md`}
+                disabled={addedToCart[index]}
+              >
+                {addedToCart[index] ? 'Added to Cart' : 'Add to Cart'}
+              </button>
+            </div>
+          </Link>
         ))}
       </div>
     </div>
